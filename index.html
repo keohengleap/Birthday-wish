@@ -249,11 +249,44 @@ nav.scrolled{padding:10px 44px;}
 .tl-year{font-size:.67rem;letter-spacing:.16em;color:var(--hot);font-weight:700;text-transform:uppercase;margin-bottom:3px;}
 .tl-name{font-family:'Playfair Display',serif;font-size:1.05rem;color:#fff;margin-bottom:3px;}
 .tl-desc{color:var(--dim);font-size:.82rem;line-height:1.6;}
-@media(max-width:580px){
-  .tl-wrap::before{left:24px;}
-  .tl-row{grid-template-columns:48px 1fr;}
-  .tl-row:nth-child(even) .tl-l,.tl-row:nth-child(even) .tl-r{order:unset;text-align:left;}
-  .tl-l{display:none;}.tl-r{grid-column:2;text-align:left;}.tl-dot{grid-column:1;}
+@media (max-width: 580px) {
+    /* 1. Ensure the background photo stays completely visible */
+    #site-bg {
+        display: block !important;
+        position: fixed !important;
+        width: 100vw !important;
+        height: 100dvh !important;
+        background-size: cover !important;
+        background-position: center center !important;
+    }
+
+    /* 2. Realign the timeline track to the left side */
+    .tl-wrap::before { left: 24px; }
+    
+    /* 3. Reconfigure the grid structure for mobile rows */
+    .tl-row {
+        grid-template-columns: 48px 1fr !important;
+        gap: 0 10px !important;
+    }
+    
+    /* 4. FIX THE MISSING TEXT: Do NOT hide .tl-l. Force both sides to align right of the track */
+    .tl-l, .tl-r {
+        display: block !important;
+        grid-column: 2 !important;
+        text-align: left !important;
+    }
+
+    /* 5. Force the glowing pink dots to stay on column 1 */
+    .tl-dot {
+        grid-column: 1 !important;
+    }
+
+    /* 6. Reset any desktop alternating rules so everything orders cleanly */
+    .tl-row:nth-child(even) .tl-l, 
+    .tl-row:nth-child(even) .tl-r {
+        order: unset !important;
+        text-align: left !important;
+    }
 }
  
 /* ══════════════ FINAL ══════════════ */
