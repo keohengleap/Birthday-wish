@@ -623,45 +623,73 @@ document.addEventListener('DOMContentLoaded', () => {
   if (puBtn) puBtn.addEventListener('click', closePopup);
 });
  
-/* ── Date Yes/No ── */
-let noScale=1;
-let pickedDate='';
-function pickDate(el){
-  document.querySelectorAll('.date-opt').forEach(d=>d.classList.remove('selected'));
-  el.classList.add('selected');
-  pickedDate=el.dataset.val;
+/* —- Date Yes/No —- */
+let noScale = 1;
+let pickedDate = '';
+
+// Paste your actual details right here:
+const TELEGRAM_BOT_TOKEN = "8771677675:AAGylmmOK_xrmBHx3n1GvGuu5q9rr506k-w";
+const TELEGRAM_CHAT_ID = "5604242362";
+
+function pickDate(el) {
+    document.querySelectorAll('.date-opt').forEach(d => d.classList.remove('selected'));
+    el.classList.add('selected');
+    pickedDate = el.dataset.val;
 }
-function shrinkNo(){
-  noScale=Math.max(0.04,noScale-0.19);
-  const nb=document.getElementById('no-btn');
-  nb.style.transform=`scale(${noScale})`;
-  nb.style.opacity=noScale;
-  if(noScale<=0.06){nb.style.display='none';}
+
+function shrinkNo() {
+    noScale = Math.max(0.04, noScale - 0.19);
+    const nb = document.getElementById('no-btn');
+    nb.style.transform = `scale(${noScale})`;
+    nb.style.opacity = noScale;
+    if (noScale <= 0.06) { nb.style.display = 'none'; }
 }
-const dateMsgs={
-  kaixin:{icon:'🎡',label:'Our Kaixin Date is booked😝! 🎡',note:'Oh, I <em>cannot believe</em> you said YES! My heart is doing backflips right now! 🥰 A Kaixin date with you — full of laughter, joy, and endless happy moments together. I am going to make sure every second is absolutely magical. You deserve all the fun in the world! 💖'},
-  movie:{icon:'🎬',label:'Our Movie Date is confirmed😝! 🎬',note:'Oh my goodness, I <em>cannot believe</em> you actually said YES! 🥹💖 A movie date with you is going to be the best thing ever — cozy blankets, popcorn, your hand in mine… I honestly cannot think of anything more perfect. I\'ve been waiting for this moment! ✨'},
+
+const dateMsgs = {
+    kaixin: { icon: '🎡', label: 'Our Kaixin Date is booked! 🎡', note: 'Oh, I <em>cannot believe</em> you said YES! My heart is doing backflips right now! 🤩 A Kaixin date with you – full of laughter, joy, and endless happy moments together. I am going to make sure every second is absolutely magical. You deserve all the fun in the world! 💖' },
+    movie: { icon: '🎬', label: 'Our Movie Date is confirmed! 🎬', note: 'Oh my goodness, I <em>cannot believe</em> you actually said YES! 🤩 A movie date with you is going to be the best thing ever – cozy blankets, popcorn, your hand in mine... I honestly cannot think of anything more perfect. I\'ve been waiting for this moment! ✨' }
 };
-function sayYes(){
-  const card=document.getElementById('date-card');
-  const msg=dateMsgs[pickedDate]||dateMsgs['kaixin'];
-  document.getElementById('yes-note-text').innerHTML=msg.note;
-  document.getElementById('yes-date-icon').textContent=msg.icon;
-  document.getElementById('yes-date-label').textContent=msg.label;
- 
-  const sp=document.getElementById('yes-sparkles');sp.innerHTML='';
-  for(let i=0;i<18;i++){
-    const d=document.createElement('div');d.className='yes-sp';
-    const angle=(Math.PI*2/18)*i;const r=48+Math.random()*20;
-    const cx3=50+Math.cos(angle)*r,cy3=50+Math.sin(angle)*r;
-    d.style.cssText=`left:${cx3}%;top:${cy3}%;--spx:${(Math.random()*40-20).toFixed(0)}px;--spy:${(Math.random()*40-20).toFixed(0)}px;--spd:${(Math.random()*1.5+1).toFixed(1)}s;--spdel:${(Math.random()*.8).toFixed(2)}s;`;
-    sp.appendChild(d);
-  }
-  card.classList.add('said-yes');
-  launchConfetti();launchConfetti();
-  sparks(innerWidth/2,innerHeight*.6,24);
-  setTimeout(()=>sparks(innerWidth/2,innerHeight*.6,20),400);
-  toast('It\'s a date! 💖✨');
+
+function sayYes() {
+    const card = document.getElementById('date-card');
+    const msg = dateMsgs[pickedDate] || dateMsgs['kaixin'];
+    document.getElementById('yes-note-text').innerHTML = msg.note;
+    document.getElementById('yes-date-icon').textContent = msg.icon;
+    document.getElementById('yes-date-label').textContent = msg.label;
+    
+    const sp = document.getElementById('yes-sparkles'); sp.innerHTML = '';
+    for (let i = 0; i < 18; i++) {
+        const d = document.createElement('div'); d.className = 'yes-sp';
+        const angle = (Math.PI * 2 / 18) * i; const r = 40 + Math.random() * 20;
+        const cx3 = 50 + Math.cos(angle) * r, cy3 = 50 + Math.sin(angle) * r;
+        d.style.cssText = `left:${cx3}%;top:${cy3}%;--spx:${(Math.random() * 40 - 20).toFixed(0)}px;--spy:${(Math.random() * 40 - 20).toFixed(0)}px;--spd:${(Math.random() * 1.5 + 1).toFixed(1)}s;--spdel:${(Math.random() * .8).toFixed(2)}s;`;
+        sp.appendChild(d);
+    }
+    
+    card.classList.add('said-yes');
+    launchConfetti(); launchConfetti();
+    sparks(innerWidth / 2, innerHeight * .6, 24);
+    setTimeout(() => sparks(innerWidth / 2, innerHeight * .6, 20), 400);
+    toast('It\'s a date! ❤️✨');
+
+    // ==================== NEW TELEGRAM NOTIFICATION CODE ====================
+    // Determine what plan name to display in the message
+    const planName = pickedDate === 'movie' ? 'Movie Date 🎬' : 'Kaixin Date 🎡';
+    const messageText = `🎉 **Good news! She said YES!** \n📍 **Chosen Plan:** ${planName}`;
+
+    const telegramUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+
+    fetch(telegramUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: messageText,
+            parse_mode: "Markdown"
+        })
+    })
+    .catch(error => console.error("Telegram Error:", error));
+    // ========================================================================
 }
  
 /* ── Timeline ── */
