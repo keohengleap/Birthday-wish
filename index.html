@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
  
 /* —- Date Yes/No —- */
 let noScale = 1;
-let pickedDate = '';
+let pickedDate = ''; // This starts empty
 
 // Paste your actual details right here:
 const TELEGRAM_BOT_TOKEN = "8771677675:AAGylmmOK_xrmBHx3n1GvGuu5q9rr506k-w";
@@ -634,7 +634,7 @@ const TELEGRAM_CHAT_ID = "5604242362";
 function pickDate(el) {
     document.querySelectorAll('.date-opt').forEach(d => d.classList.remove('selected'));
     el.classList.add('selected');
-    pickedDate = el.dataset.val;
+    pickedDate = el.dataset.val; // Sets to 'kaixin' or 'movie'
 }
 
 function shrinkNo() {
@@ -651,8 +651,17 @@ const dateMsgs = {
 };
 
 function sayYes() {
+    // ==================== NEW ELIGIBILITY CHECK ====================
+    // If pickedDate is still empty, she hasn't clicked a card yet!
+    if (pickedDate === '') {
+        alert("Please pick a dream date first! 😉👇");
+        return; // Stops the rest of the function from running
+    }
+    // ================================================================
+
     const card = document.getElementById('date-card');
-    const msg = dateMsgs[pickedDate] || dateMsgs['kaixin'];
+    const msg = dateMsgs[pickedDate]; // No longer needs a fallback because we know it has a value!
+    
     document.getElementById('yes-note-text').innerHTML = msg.note;
     document.getElementById('yes-date-icon').textContent = msg.icon;
     document.getElementById('yes-date-label').textContent = msg.label;
@@ -672,8 +681,7 @@ function sayYes() {
     setTimeout(() => sparks(innerWidth / 2, innerHeight * .6, 20), 400);
     toast('It\'s a date! ❤️✨');
 
-    // ==================== NEW TELEGRAM NOTIFICATION CODE ====================
-    // Determine what plan name to display in the message
+    // Determine what plan name to display in the Telegram message
     const planName = pickedDate === 'movie' ? 'Movie Date 🎬' : 'Kaixin Date 🎡';
     const messageText = `🎉 **Good news! She said YES!** \n📍 **Chosen Plan:** ${planName}`;
 
@@ -689,7 +697,6 @@ function sayYes() {
         })
     })
     .catch(error => console.error("Telegram Error:", error));
-    // ========================================================================
 }
  
 /* ── Timeline ── */
